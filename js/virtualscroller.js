@@ -1,3 +1,7 @@
+/*
+ * Credit to Bill White
+ * http://bl.ocks.org/billdwhite/36d15bc6126e6f6365d0
+ */
 d3.VirtualScroller = function() {
     var enter = null,
         update = null,

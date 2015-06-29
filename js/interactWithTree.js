@@ -1,23 +1,12 @@
-function convArrToObj(array){
-    var thisEleObj = new Object();
-    if(typeof array == "object"){
-        for(var i in array){
-            var thisEle = convArrToObj(array[i]);
-            thisEleObj[i] = thisEle;
-        }
-    }else {
-        thisEleObj = array;
-    }
-    return thisEleObj;
+// Script containing helper functions for interacting with the tree and nodes
 
-}
 
-// A recursive helper function for performing some setup by walking through all nodes
+/*
+ * A recursive helper function for performing some setup by walking through all nodes
+ */
 function visit(parent, visitFn, childrenFn) {
     if (!parent) return;
-
     visitFn(parent);
-
     var children = childrenFn(parent);
     if (children) {
         var count = children.length;
@@ -27,12 +16,9 @@ function visit(parent, visitFn, childrenFn) {
     }
 }
 
-function popTooltip() {
-
-}
-
-
-// sort the tree according to the node names
+/*
+ * sort the tree according to the node names
+ */
 function sortTree() {
     tree.sort(function(a, b) {
         return b.name.toLowerCase() < a.name.toLowerCase() ? 1 : -1;
@@ -40,7 +26,9 @@ function sortTree() {
 }
 
 
-// Helper functions for collapsing and expanding nodes.
+/*
+ * Helper functions for collapsing and expanding nodes.
+ */
 function collapse(d) {
     if (d.children) {
         d._children = d.children;
@@ -57,7 +45,9 @@ function expand(d) {
     }
 }
 
-// TODO: Pan function, can be better implemented.
+/*
+ * Dynamically adjusts node's translate values while zoomed in/out
+ */
 function pan(domNode, direction) {
     var speed = panSpeed;
     if (panTimer) {
@@ -83,12 +73,16 @@ function pan(domNode, direction) {
     }
 }
 
-// Define the zoom function for the zoomable tree
+/*
+ * Define the zoom function for the zoomable tree
+ */
 function zoom() {
     svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 }
 
-// Function to center node when clicked/dropped so node doesn't get lost when collapsing/moving with large amount of children.
+/*
+ * Function to center node when clicked/dropped so node doesn't get lost when collapsing/moving with large amount of children.
+ */
 function centerNode(source) {
     scale = zoomListener.scale();
     x = -source.y0;
@@ -102,7 +96,6 @@ function centerNode(source) {
     zoomListener.translate([x, y]);
 }
 
-
 var overCircle = function(d) {
     selectedNode = d;
     updateTempConnector();
@@ -112,7 +105,9 @@ var outCircle = function(d) {
     updateTempConnector();
 };
 
-// Toggle children function
+/*
+ * Toggle children
+ */
 function toggleChildren(d) {
     if (d.children) {
         d._children = d.children;
@@ -124,8 +119,9 @@ function toggleChildren(d) {
     return d;
 }
 
-
-// Toggle children on click.
+/*
+ * Toggle children upon click
+ */
 function click(d) {
     // if (d3.event.defaultPrevented) return; // click suppressed
     d = toggleChildren(d);
@@ -176,8 +172,9 @@ function initiateDrag(d, domNode) {
     dragStarted = null;
 }
 
-
-// Define the drag listeners for drag/drop behaviour of nodes.
+/*
+ * Define the drag listeners for drag/drop behaviour of nodes.
+ */
 dragListener = d3.behavior.drag()
     .on("dragstart", function(d) {
         if (d == root) {
@@ -269,8 +266,9 @@ function endDrag() {
     }
 }
 
-
-    // Function to update the temporary connector indicating dragging affiliation
+/*
+ * Function to update the temporary connector indicating dragging affiliation
+ */
 var updateTempConnector = function() {
     var data = [];
     if (draggingNode !== null && selectedNode !== null) {
@@ -298,12 +296,12 @@ var updateTempConnector = function() {
     link.exit().remove();
 };
 
-
-
+/*
+ * Compute the new height, function counts total children of root node and sets tree height accordingly.
+ * This prevents the layout looking squashed when new nodes are made visible or looking sparse when nodes are removed
+ * This makes the layout more consistent.
+ */
 function update(source) {
-    // Compute the new height, function counts total children of root node and sets tree height accordingly.
-    // This prevents the layout looking squashed when new nodes are made visible or looking sparse when nodes are removed
-    // This makes the layout more consistent.
     var levelWidth = [1];
     var childCount = function(level, n) {
 
@@ -345,7 +343,8 @@ function update(source) {
         .attr("transform", function(d) {
             return "translate(" + source.x0 + "," + source.y0 + ")";
         })
-        .on('click', click);
+        .on('click', click)
+        .on("mouseover", updateTooltipBox);
 
     nodeEnter.append("circle")
         .attr('class', 'nodeCircle')
@@ -357,7 +356,7 @@ function update(source) {
     // Text appending code
     nodeEnter.append("text")
         .attr("y", function(d) {
-            return d.children || d._children ? -13 : 13;
+            return d.children || d._children ? -2 : 2;
         })
         .attr("dy", ".35em")
         .attr('class', 'nodeText')
@@ -470,4 +469,39 @@ function update(source) {
         d.x0 = d.x;
         d.y0 = d.y;
     });
+}
+
+function makeTooltipBox() {
+
+}
+
+/*
+ * Interacting with Toolboxes
+ */
+var isFirstTime;
+
+function makeTooltipBox() {
+    popup = d3.select("#tree-container")
+        .append("div")
+        .attr("class", "popup")
+        .style("left", viewerWidth - 300 - 28)
+        .style("top", $(window).height() - viewerHeight);
+
+    popup.append("h2").text("Employee Information");
+
+    isFirstTime = true;
+
+}
+
+function updateTooltipBox() {
+
+    var text = d3.select(this).datum().description;
+
+    if (isFirstTime) {
+        d3.select(".popup").append("p").text(text);
+    } else {
+        d3.select(".popup p").remove();
+        d3.select(".popup").append("p").text(text);
+    }
+    isFirstTime = false;
 }
