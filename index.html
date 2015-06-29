@@ -1,14 +1,12 @@
-<!-- 
-
+<!--
 Author: Jenna Kwon
 
 Draggable, zoomable and collapsible D3 tree from Mike Bostock
 Integrated with search and tooltip functionality
 
 BSD license
+-->
 
- -->
-<!DOCTYPE html>
 <meta charset="utf-8">
 
 <head>
@@ -19,16 +17,13 @@ BSD license
 <script src="js/interactWithTree.js"></script>
 <script src="js/interactWithList.js"></script>
 <script src="js/main.js"></script>
-
 <link rel="stylesheet" href="css/style.css" />
 
 <body>
-  Search: <input type="text" id="user-input" /> <button id="submit" type="search-button"> Go! </button>
-
-  <!-- tree container -->
-  <div id="tree-container"> </div>
-  <!-- scrollable search list -->
-  <div class="viewport"></div>
-
+<!-- Search button -->
+Search: <label for="user-input"></label><input type="text" id="user-input" /> <button id="submit"> Go! </button>
+<!-- Tree container -->
+<div id="tree-container"> </div>
+<!-- Scrollable search list -->
+<div class="viewport"></div>
 </body>
-</html>
