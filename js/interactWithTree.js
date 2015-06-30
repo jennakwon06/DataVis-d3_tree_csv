@@ -490,14 +490,14 @@ function updateTooltipBox() {
     var description = d3.select(this).datum().description;
     var age = d3.select(this).datum().age;
 
-    var paragraph = d3.select(".tooltip-box").append("p");
+    //var paragraph = d3.select(".tooltip-box").append("p");
 
 
     if (isFirstTime) {
-        paragraph.html("Description:" + description + "<br> Age:" + age);
+        d3.select(".tooltip-box").append("p").html("Description:" + description + "<br> Age:" + age);
     } else {
-        paragraph.remove();
-        paragraph.html("Description:" + description + "<br> Age:" + age);
+        d3.select(".tooltip-box p").remove();
+        d3.select(".tooltip-box").append("p").html("Description:" + description + "<br> Age:" + age);
     }
     isFirstTime = false;
 }
