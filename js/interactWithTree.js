@@ -25,7 +25,6 @@ function sortTree() {
     });
 }
 
-
 /*
  * Helper functions for collapsing and expanding nodes.
  */
@@ -123,7 +122,7 @@ function toggleChildren(d) {
  * Toggle children upon click
  */
 function click(d) {
-    // if (d3.event.defaultPrevented) return; // click suppressed
+    // if (d3.event.defaultPrevented) return; //   suppressed
     d = toggleChildren(d);
     update(d);
     centerNode(d);
@@ -200,7 +199,6 @@ dragListener = d3.behavior.drag()
             panTimer = true;
             pan(this, 'left');
         } else if (relCoords[0] > ($('svg').width() - panBoundary)) {
-
             panTimer = true;
             pan(this, 'right');
         } else if (relCoords[1] < panBoundary) {

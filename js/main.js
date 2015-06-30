@@ -128,8 +128,6 @@ treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
         return d;
     });
 
-    console.log(allNodes);
-
     // Upon query submission, populate the list with matching nodes
     $('#submit').on("click", function(ev) {
         matchesText = []; // Clear the matches before every click
@@ -142,6 +140,9 @@ treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
             }
         }
         populateList(matchesText); // Populate the list
+        // Enable click on rectangles
+        enableRectangleClick();
     });
+
 
 });

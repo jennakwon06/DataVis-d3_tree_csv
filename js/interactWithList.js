@@ -20,8 +20,8 @@ function makeList() {
         .attr("class", "chartGroup");
     //.attr("filter", "url(#dropShadow1)"); // sometimes causes issues in chrome
 
-    chartGroup.append("rect")
-        .attr("fill", "#FFFFFF");
+    //chartGroup.append("rect")
+    //    .attr("fill", "#FFFFFF");
 
     rowEnter = function(rowSelection) {
         rowSelection.append("rect")
@@ -113,6 +113,27 @@ function createFilters(svgDefs) {
         .attr("mode", "normal");
 }
 
+
+/*
+ * Jenna: Enable rectangles to be clickable
+ * Upon click, zoom to corresponding node
+ */
+
+function enableRectangleClick() {
+    d3.selectAll("rect").on("click", zoomToNode);
+}
+
+
 /*
  * Upon click on rectangles, zoom to corresponding nodes
  */
+function zoomToNode(rect) {
+
+    for (var k = 0; k < allNodes.length; k++) {
+        if (allNodes[k].text() === rect) {
+            expand(root);
+            click(allNodes[k]);
+            centerNode(allNodes[k].datum());
+        }
+    }
+}
