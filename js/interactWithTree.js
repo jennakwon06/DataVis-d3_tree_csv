@@ -371,7 +371,7 @@ function update(source) {
         .attr('class', 'ghostCircle')
         .attr("r", 30)
         .attr("opacity", 0.2) // change this to zero to hide the target area
-    .style("fill", "red")
+        .style("fill", "red")
         .attr('pointer-events', 'mouseover')
         .on("mouseover", function(node) {
             overCircle(node);
@@ -471,21 +471,13 @@ function update(source) {
     });
 }
 
-function makeTooltipBox() {
-
-}
-
 /*
  * Interacting with Toolboxes
  */
 var isFirstTime;
 
 function makeTooltipBox() {
-    popup = d3.select("#tree-container")
-        .append("div")
-        .attr("class", "popup")
-        .style("left", viewerWidth - 300 - 28)
-        .style("top", $(window).height() - viewerHeight);
+    popup = d3.select(".tooltip-box");
 
     popup.append("h2").text("Employee Information");
 
@@ -498,10 +490,10 @@ function updateTooltipBox() {
     var text = d3.select(this).datum().description;
 
     if (isFirstTime) {
-        d3.select(".popup").append("p").text(text);
+        d3.select(".tooltip-box").append("p").text(text);
     } else {
-        d3.select(".popup p").remove();
-        d3.select(".popup").append("p").text(text);
+        d3.select(".tooltip-box p").remove();
+        d3.select(".tooltip-box").append("p").text(text);
     }
     isFirstTime = false;
 }

@@ -4,44 +4,46 @@
  */
 
 
-/** Global variables interacting with tree - initialized here if independent of data **/
+/** Global variables interacting with tree **/
 var baseSvg;
 var diagonal;
-var draggingNode = null;
-var duration = 750;
-var i = 0;
-var maxLabelLength = 0;
-var panBoundary = 20;
-var panSpeed = 200;
+var draggingNode;
+var duration;
+var i;
+var maxLabelLength;
+var panBoundary;
+var panSpeed;
 var root;
-var selectedNode = null;
+var selectedNode;
 var svgGroup;
 var totalNodes;
-var tooltip;
+var tree;
 var viewerHeight;
 var viewerWidth;
-var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
+var zoomListener;
 
 /** Global variables interacting with list **/
+var allNodes;
 var chartGroup;
-var maxNodes;
-var query = null;
+var matches;
+var query;
 var rowEnter;
 var rowExit;
 var rowUpdate;
 var scrollSVG;
 var virtualScroller;
 
-treeJSON = d3.csv("../data/sampleData.csv", function (error, data) {
+treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
 
-    /** CONVERT CSV DATA TO HIERARCHICAL DATA **/
-    var dataMap = data.reduce(function (map, node) {
+    /** CONVERT DATA FROM CSV TO HIERARCHIAL TREE **/
+    var dataMap = data.reduce(function(map, node) {
         map[node.name] = node;
         return map;
     }, {});
 
     var nestedData = [];
-    data.forEach(function (node) {
+    data.forEach(function(node) {
+        // add to parent
         var parent = dataMap[node.parent];
         if (parent) {
             // create child array if it doesn't exist
@@ -55,10 +57,17 @@ treeJSON = d3.csv("../data/sampleData.csv", function (error, data) {
     });
 
     /** SET UP **/
-    diagonal = d3.svg.diagonal()
-        .projection(function (d) {
-            return [d.y, d.x];
-        });
+    diagonal = d3.svg.diagonal() // define a d3 diagonal projection for use by the node paths later on.
+        .projection(function(d) { return [d.y, d.x]; });
+
+    draggingNode = null;
+    duration = 750;
+    i = 0;
+    maxLabelLength = 0;
+    panBoundary = 20; // Within 20px from edges will pan when dragging.
+    panSpeed = 200;
+    selectedNode = null;
+    totalNodes = 0;
 
     viewerHeight = $(document).height();
     viewerWidth = $(document).width();
@@ -74,69 +83,72 @@ treeJSON = d3.csv("../data/sampleData.csv", function (error, data) {
         return d.children && d.children.length > 0 ? d.children : null;
     })
 
-    // sort the tree in case CSV is not sorted
+    // Sort the tree initially in case CSV is not sorted
     sortTree();
 
-    // define the baseSvg, attaching a class for styling and the zoomListener
+    // Set zoom listener to enable zooming functionality
+    zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
+
+    // Define the baseSvg, attaching a class for styling and the zoomListener
     baseSvg = d3.select("#tree-container").append("svg")
         .attr("width", viewerWidth)
         .attr("height", viewerHeight)
         .attr("class", "overlay")
         .call(zoomListener);
 
-    // define tooltip to show
-    //tooltip = d3.tip()
-    //    .attr("class", "tip")
-    //    .offset([-10, 0])
-    //    .html(function (d) {
-    //        return "<strong> Name:</strong> <span style='color:red'>" + d.name + "/span>";
-    //    });
-
     // Append a group which holds all nodes and which the zoom Listener can act upon.
     svgGroup = baseSvg.append("g");
 
-    // define the root
+    // Define the root
     root = nestedData[0];
     root.x0 = viewerHeight / 2;
     root.y0 = 0;
 
-    // layout the tree initially
+    // Layout the tree initially and center on the root node.
     update(root);
 
-    // start tree centered at root, collapsed
+    // Start tree with at root, collapsed
     centerNode(root);
     click(root);
 
-    // show list in viewport
+    // Show list in viewport
     makeList();
 
-    // Pop tooltips upon right click of menu items
     makeTooltipBox();
 
     /** WORKFLOW **/
 
-    // populate an array with all the names of node
-    var allNodes = [];
-    d3.selectAll(".node").datum(function (d) {
-        allNodes.push(d.name);
+        // Populate an array with all the names of node
+    allNodes = [];
+    d3.selectAll(".node").datum(function(d) {
+        //var nodePos = d3.transform(d3.select(this.parentNode).attr("transform")).translate;
+        if (d !== "undefined") {
+            allNodes.push(d3.select(this)[0]);
+        }
         return d;
     });
 
-    // upon query submission, populate the list with matching nodes
-    $('#submit').on("click", function (d) {
-        // clear the matches and list before every click
-        var matches = [];
-        clearList();
-        //obtain user input
-        query = $('#user-input').val();
-        //iterate through array and populate list with items matched with query
-        for (i = 0; i < allNodes.length; i++) {
-            if (~allNodes[i].indexOf(query)) {
-                matches.push(allNodes[i]);
-            }
+    //console.log(allNodes);
+
+
+    // Upon query submission, populate the list with matching nodes
+    $('#submit').on("click", function(ev) {
+        matches = []; // Clear the matches before every click
+        clearList(); // Clear the list before every click
+        query = $('#user-input').val(); // Obtain query
+
+        for (i = 0; i < allNodes.length; i++) { // Populate matched array
+
+            console.log(allNodes[i].datum(function(d) {
+                console.log(d);
+                return d;
+            }));
+
+            //if (~allNodes[i].name.indexOf(query)) {
+            //  matches.push(allNodes[i]);
+            //}
         }
-        // populate the list
-        populateList(matches);
+        populateList(matches); // Populate the list
     });
 
 });

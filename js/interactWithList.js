@@ -110,3 +110,7 @@ function createFilters(svgDefs) {
         .attr("in2", "blurOut")
         .attr("mode", "normal");
 }
+
+/*
+ * Upon click on rectangles, zoom to corresponding nodes
+ */
