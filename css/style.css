@@ -6,6 +6,10 @@ rect {
     cursor: pointer;
 }
 
+.row text {
+    cursor: pointer;
+}
+
 #user-input {
     padding-bottom: 5px;
     padding-top: 5px;

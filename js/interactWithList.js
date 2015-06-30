@@ -129,11 +129,19 @@ function enableRectangleClick() {
  */
 function zoomToNode(rect) {
 
+    var matchNode = null;
+
     for (var k = 0; k < allNodes.length; k++) {
         if (allNodes[k].text() === rect) {
-            expand(root);
-            click(allNodes[k]);
-            centerNode(allNodes[k].datum());
+            matchNode = allNodes[k];
         }
     }
+
+    if (rootTracker.attr("clicked") === "true") {
+        click(root);
+        rootTracker.attr("clicked", false);
+    }
+    centerNode(matchNode.datum());
+
 }
+

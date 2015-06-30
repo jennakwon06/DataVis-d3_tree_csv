@@ -123,9 +123,13 @@ function toggleChildren(d) {
  */
 function click(d) {
     // if (d3.event.defaultPrevented) return; //   suppressed
+    if (typeof d == 'undefined') {
+        return;
+    }
     d = toggleChildren(d);
     update(d);
     centerNode(d);
+    rootTracker.attr("clicked", true);
 }
 
 

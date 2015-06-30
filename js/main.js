@@ -14,6 +14,7 @@ var maxLabelLength;
 var panBoundary;
 var panSpeed;
 var root;
+var rootTracker;
 var selectedNode;
 var svgGroup;
 var totalNodes;
@@ -109,7 +110,6 @@ treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
 
     // Start tree with at root, collapsed
     centerNode(root);
-    click(root);
 
     // Show list in viewport
     makeList();
@@ -118,7 +118,7 @@ treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
 
     /** WORKFLOW **/
 
-    // Populate an array with all the names of node
+    // Keep track of all the nodes
     allNodes = [];
     d3.selectAll(".node").datum(function(d) {
         //var nodePos = d3.transform(d3.select(this.parentNode).attr("transform")).translate;
@@ -127,6 +127,21 @@ treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
         }
         return d;
     });
+
+    // create "isClicked" attribute for all nodes
+    var nodes = d3.selectAll(".node").attr("clicked", false);
+
+    // Identify root tracker
+
+    for (var z = 0; z < allNodes.length; z++) {
+        if (allNodes[z].datum() === root) {
+            rootTracker = allNodes[z];
+        }
+    }
+
+    click(root);
+    rootTracker.attr("clicked", true);
+
 
     // Upon query submission, populate the list with matching nodes
     $('#submit').on("click", function(ev) {
