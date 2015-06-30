@@ -62,6 +62,14 @@ body {
 }
 
 .scroll-svg {
+    top:100px
+}
+
+.viewport h2 {
+    margin: 0 0 0.5rem 0;
+    padding: 3px;
+    text-align: center;
+    font-family: arial, helvetica, sans-serif;
 }
 
 .longscroll .row {

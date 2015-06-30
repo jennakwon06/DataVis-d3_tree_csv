@@ -472,7 +472,7 @@ function update(source) {
 }
 
 /*
- * Interacting with Toolboxes
+ * Tree interacting with Toolboxes
  */
 var isFirstTime;
 
@@ -487,13 +487,17 @@ function makeTooltipBox() {
 
 function updateTooltipBox() {
 
-    var text = d3.select(this).datum().description;
+    var description = d3.select(this).datum().description;
+    var age = d3.select(this).datum().age;
+
+    var paragraph = d3.select(".tooltip-box").append("p");
+
 
     if (isFirstTime) {
-        d3.select(".tooltip-box").append("p").text(text);
+        paragraph.html("Description:" + description + "<br> Age:" + age);
     } else {
-        d3.select(".tooltip-box p").remove();
-        d3.select(".tooltip-box").append("p").text(text);
+        paragraph.remove();
+        paragraph.html("Description:" + description + "<br> Age:" + age);
     }
     isFirstTime = false;
 }

@@ -25,7 +25,7 @@ var zoomListener;
 /** Global variables interacting with list **/
 var allNodes;
 var chartGroup;
-var matches;
+var matchesText;
 var query;
 var rowEnter;
 var rowExit;
@@ -118,37 +118,30 @@ treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
 
     /** WORKFLOW **/
 
-        // Populate an array with all the names of node
+    // Populate an array with all the names of node
     allNodes = [];
     d3.selectAll(".node").datum(function(d) {
         //var nodePos = d3.transform(d3.select(this.parentNode).attr("transform")).translate;
         if (d !== "undefined") {
-            allNodes.push(d3.select(this)[0]);
+            allNodes.push(d3.select(this));
         }
         return d;
     });
 
-    //console.log(allNodes);
-
+    console.log(allNodes);
 
     // Upon query submission, populate the list with matching nodes
     $('#submit').on("click", function(ev) {
-        matches = []; // Clear the matches before every click
+        matchesText = []; // Clear the matches before every click
         clearList(); // Clear the list before every click
         query = $('#user-input').val(); // Obtain query
 
         for (i = 0; i < allNodes.length; i++) { // Populate matched array
-
-            console.log(allNodes[i].datum(function(d) {
-                console.log(d);
-                return d;
-            }));
-
-            //if (~allNodes[i].name.indexOf(query)) {
-            //  matches.push(allNodes[i]);
-            //}
+            if (~allNodes[i].text().indexOf(query)) {
+              matchesText.push(allNodes[i].text());
+            }
         }
-        populateList(matches); // Populate the list
+        populateList(matchesText); // Populate the list
     });
 
 });

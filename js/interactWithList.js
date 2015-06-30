@@ -7,6 +7,8 @@
 function makeList() {
     var colorScale = d3.scale.category20();
 
+    d3.select(".viewport").append("h2").text("Search Results");
+
     scrollSVG = d3.select(".viewport").append("svg")
         .attr("class", "scroll-svg");
 
