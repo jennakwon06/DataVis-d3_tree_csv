@@ -1,19 +1,22 @@
+// Script containing helper functions for interacting with the scrollable list
+
 /*
- * Make list initially
- */ 
+ * Set up a list in viewport
+ *
+ */
 function makeList() {
     var colorScale = d3.scale.category20();
 
     scrollSVG = d3.select(".viewport").append("svg")
-        .attr("class", "scroll-svg")
+        .attr("class", "scroll-svg");
 
     var defs = scrollSVG.insert("defs", ":first-child");
 
     createFilters(defs);
 
     chartGroup = scrollSVG.append("g")
-        .attr("class", "chartGroup")
-        //.attr("filter", "url(#dropShadow1)"); // sometimes causes issues in chrome
+        .attr("class", "chartGroup");
+    //.attr("filter", "url(#dropShadow1)"); // sometimes causes issues in chrome
 
     chartGroup.append("rect")
         .attr("fill", "#FFFFFF");
@@ -57,14 +60,14 @@ function makeList() {
 
 /*
  * Clear all the rectangles inside virtual scroller 
- */ 
+ */
 function clearList() {
     d3.selectAll("chartGroup > *").remove();
 }
 
 /*
  * Populate the list with match data 
- */ 
+ */
 function populateList(input) {
     var j = 0;
     virtualScroller.data(input, function(d) {
@@ -74,6 +77,9 @@ function populateList(input) {
     chartGroup.call(virtualScroller);
 }
 
+/*
+ * Helper function for makelist
+ */
 function createFilters(svgDefs) {
     var filter = svgDefs.append("svg:filter")
         .attr("id", "dropShadow1")
@@ -104,3 +110,7 @@ function createFilters(svgDefs) {
         .attr("in2", "blurOut")
         .attr("mode", "normal");
 }
+
+/*
+ * Upon click on rectangles, zoom to corresponding nodes
+ */

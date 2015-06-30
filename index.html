@@ -14,21 +14,22 @@ BSD license
 <head>
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 <script src="js/virtualscroller.js"></script>
-<script src="js/interactWithTree.js"></script>
 <script src="js/interactWithList.js"></script>
-<script src="js/mainCSV.js"></script>
+<script src="js/interactWithTree.js"></script>
+<script src="js/main.js"></script>
 
 <link rel="stylesheet" href="css/style.css" />
 
 <body>
-  Search: <input type="text" id="user-input" /> <button id="submit" type="search-button"> Go! </button>
+  Search: <label for="user-input"></label><input type="text" id="user-input" /> <button id="submit"> Go! </button>
 
   <!-- tree container -->
   <div id="tree-container"> </div>
   <!-- scrollable search list -->
   <div class="viewport"></div>
+  <!-- tooltip box container -->
+  <div class="tooltip-box"></div>
+
 
 </body>
-</html>
