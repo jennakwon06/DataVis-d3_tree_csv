@@ -137,10 +137,11 @@ function zoomToNode(rect) {
         }
     }
 
-    if (rootTracker.attr("clicked") === "true") {
-        click(root);
-        rootTracker.attr("clicked", false);
-    }
+    //if (matchNode.attr("clicked") === "true") {
+    //    click(matchNode);
+    //    matchNode.attr("clicked", false);
+    //}
+
     centerNode(matchNode.datum());
 
 }

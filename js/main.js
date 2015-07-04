@@ -106,10 +106,11 @@ treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
     root.y0 = 0;
 
     // Layout the tree initially and center on the root node.
+    tree.nodes(root).forEach(function(n) { toggle(n); });
     update(root);
+    centerNode(root);
 
     // Start tree with at root, collapsed
-    centerNode(root);
 
     // Show list in viewport
     makeList();
@@ -128,20 +129,16 @@ treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
         return d;
     });
 
-    // create "isClicked" attribute for all nodes
-    var nodes = d3.selectAll(".node").attr("clicked", false);
-
-    // Identify root tracker
-
-    for (var z = 0; z < allNodes.length; z++) {
-        if (allNodes[z].datum() === root) {
-            rootTracker = allNodes[z];
-        }
-    }
-
-    click(root);
-    rootTracker.attr("clicked", true);
-
+    //// create "isClicked" attribute for all nodes
+    //// initially all unclicked / open
+    //d3.selectAll(".node").attr("clicked", false);
+    //
+    //// Identify root tracker
+    //for (var z = 0; z < allNodes.length; z++) {
+    //    if (allNodes[z].datum() === root) {
+    //        rootTracker = allNodes[z];
+    //    }
+    //}
 
     // Upon query submission, populate the list with matching nodes
     $('#submit').on("click", function(ev) {
