@@ -106,9 +106,11 @@ treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
     root.y0 = 0;
 
     // Layout the tree initially and center on the root node.
+    // collapse all nodes;
+    tree.nodes(root).forEach(function(n) {
+        toggle(n);
+    });
     update(root);
-
-    // Start tree with at root, collapsed
     centerNode(root);
 
     // Show list in viewport
@@ -119,29 +121,11 @@ treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
     /** WORKFLOW **/
 
     // Keep track of all the nodes
-    allNodes = [];
-    d3.selectAll(".node").datum(function(d) {
-        //var nodePos = d3.transform(d3.select(this.parentNode).attr("transform")).translate;
-        if (d !== "undefined") {
-            allNodes.push(d3.select(this));
-        }
-        return d;
-    });
+    allNodes = data;
+
 
     // create "isClicked" attribute for all nodes
-    var nodes = d3.selectAll(".node").attr("clicked", false);
-
-    // Identify root tracker
-
-    for (var z = 0; z < allNodes.length; z++) {
-        if (allNodes[z].datum() === root) {
-            rootTracker = allNodes[z];
-        }
-    }
-
-    click(root);
-    rootTracker.attr("clicked", true);
-
+    //d3.selectAll(".node").attr("clicked", false);
 
     // Upon query submission, populate the list with matching nodes
     $('#submit').on("click", function(ev) {
@@ -150,8 +134,8 @@ treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
         query = $('#user-input').val(); // Obtain query
 
         for (i = 0; i < allNodes.length; i++) { // Populate matched array
-            if (~allNodes[i].text().indexOf(query)) {
-              matchesText.push(allNodes[i].text());
+            if (~allNodes[i].name.indexOf(query)) {
+              matchesText.push(allNodes[i].name);
             }
         }
         populateList(matchesText); // Populate the list

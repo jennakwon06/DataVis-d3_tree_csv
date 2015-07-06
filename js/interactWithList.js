@@ -132,16 +132,33 @@ function zoomToNode(rect) {
     var matchNode = null;
 
     for (var k = 0; k < allNodes.length; k++) {
-        if (allNodes[k].text() === rect) {
+        if (allNodes[k].name === rect) {
             matchNode = allNodes[k];
         }
     }
 
-    if (rootTracker.attr("clicked") === "true") {
-        click(root);
-        rootTracker.attr("clicked", false);
+    var parentNode = matchNode.parent;
+
+    console.log(parentNode);
+    console.log(parentNode.parent);
+    console.log(parentNode.parent.parent);
+
+
+    //// while and if here?
+    //
+    while (parentNode !== null && parentNode !== undefined) {
+        if (parentNode._children !== null && parentNode._children !== undefined) {
+            click(parentNode);
+            centerNode(parentNode);
+        }
+        parentNode = parentNode.parent;
     }
-    centerNode(matchNode.datum());
+
+    //if (rootTracker.attr("clicked") === "true") {
+    //    click(root);
+    //    rootTracker.attr("clicked", false);
+    //}
+    centerNode(matchNode);
 
 }
 

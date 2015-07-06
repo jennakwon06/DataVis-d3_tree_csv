@@ -83,9 +83,32 @@ function zoom() {
  * Function to center node when clicked/dropped so node doesn't get lost when collapsing/moving with large amount of children.
  */
 function centerNode(source) {
+
+    if (source === "null") {
+        return;
+    }
+
+    console.log(source);
     scale = zoomListener.scale();
+    console.log(-source.y0);
+    console.log(-source.x0);
+    console.log(-source.y);
+    console.log(-source.x);
+
+    //if (isNaN(-source.y0)) {
+    //    x = -source.y;
+    //} else {
+    //    x = -source.y0;
+    //}
+    //
+    //if (isNaN(-source.x0)) {
+    //    y = -source.x;
+    //} else {
+    //    y = -source.x0;
+    //}
     x = -source.y0;
     y = -source.x0;
+
     x = x * scale + viewerWidth / 2;
     y = y * scale + viewerHeight / 2;
     d3.select('g').transition()
@@ -119,17 +142,28 @@ function toggleChildren(d) {
 }
 
 /*
+ * Toggle
+ */
+
+function toggle(d) {
+    if (d.children) {
+        d._children = d.children;
+        d.children = null;
+    } else {
+        d.children = d._children;
+        d._children = null;
+    }
+    return d;
+}
+
+/*
  * Toggle children upon click
  */
 function click(d) {
-    // if (d3.event.defaultPrevented) return; //   suppressed
-    if (typeof d == 'undefined') {
-        return;
-    }
+    //if (d3.event.defaultPrevented) return; //   suppressed
     d = toggleChildren(d);
     update(d);
     centerNode(d);
-    rootTracker.attr("clicked", true);
 }
 
 
@@ -343,6 +377,7 @@ function update(source) {
         .call(dragListener)
         .attr("class", "node")
         .attr("transform", function(d) {
+            console.log(d);
             return "translate(" + source.x0 + "," + source.y0 + ")";
         })
         .on('click', click)
