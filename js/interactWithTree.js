@@ -87,13 +87,7 @@ function centerNode(source) {
     if (source === "null") {
         return;
     }
-
-    console.log(source);
     scale = zoomListener.scale();
-    console.log(-source.y0);
-    console.log(-source.x0);
-    console.log(-source.y);
-    console.log(-source.x);
 
     //if (isNaN(-source.y0)) {
     //    x = -source.y;
@@ -108,8 +102,20 @@ function centerNode(source) {
     //}
     x = -source.y0;
     y = -source.x0;
-
     x = x * scale + viewerWidth / 2;
+    y = y * scale + viewerHeight / 2;
+    d3.select('g').transition()
+        .duration(duration)
+        .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
+    zoomListener.scale(scale);
+    zoomListener.translate([x, y]);
+}
+
+function leftAlignNode(source) {
+    scale = zoomListener.scale();
+    x = -source.y0;
+    y = -source.x0;
+    x = (x * scale) + 100;
     y = y * scale + viewerHeight / 2;
     d3.select('g').transition()
         .duration(duration)
@@ -142,9 +148,8 @@ function toggleChildren(d) {
 }
 
 /*
- * Toggle
+ * Toggle one level
  */
-
 function toggle(d) {
     if (d.children) {
         d._children = d.children;
@@ -164,6 +169,36 @@ function click(d) {
     d = toggleChildren(d);
     update(d);
     centerNode(d);
+     //if (d3.event.defaultPrevented) return; //   suppressed
+    //if (typeof d == 'undefined') {
+    //    return;
+    //}
+    //
+    ////console.log(d.parent.class("clicked"));
+    //
+
+    //
+    //var selNode = d3.selectAll(".node").filter(function(node) {
+    //    return node == d;
+    //})
+    //
+    //selNode.attr("clicked", true);
+
+    if (d._children != null){
+        var isCollapsed = true
+    } else {
+        var isCollapsed = false;
+    }
+
+    d = toggleChildren(d);
+    update(d);
+
+    if (isCollapsed){
+        centerNode(d);
+    } else {
+        centerNode(d);
+    }
+
 }
 
 

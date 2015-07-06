@@ -107,11 +107,11 @@ treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
 
     // Layout the tree initially and center on the root node.
     // collapse all nodes;
-    tree.nodes(root).forEach(function(n) {
-        toggle(n);
-    });
+    tree.nodes(root).forEach(function(n) { toggle(n); });
     update(root);
     centerNode(root);
+
+    // Start tree with at root, collapsed
 
     // Show list in viewport
     makeList();
