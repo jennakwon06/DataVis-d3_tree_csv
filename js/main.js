@@ -107,22 +107,18 @@ treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
 
     // Layout the tree initially and center on the root node.
     // collapse all nodes;
-    tree.nodes(root).forEach(function(n) { toggle(n); });
+    tree.nodes(root).forEach(function(n) { toggleChildren(n); });
     update(root);
     centerNode(root);
 
-    // Start tree with at root, collapsed
-
     // Show list in viewport
     makeList();
-
     makeTooltipBox();
 
     /** WORKFLOW **/
 
     // Keep track of all the nodes
     allNodes = data;
-
 
     // create "isClicked" attribute for all nodes
     //d3.selectAll(".node").attr("clicked", false);
@@ -139,9 +135,6 @@ treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
             }
         }
         populateList(matchesText); // Populate the list
-        // Enable click on rectangles
-        enableRectangleClick();
     });
-
 
 });

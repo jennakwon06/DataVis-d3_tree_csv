@@ -68,7 +68,7 @@ function clearList() {
 }
 
 /*
- * Populate the list with match data 
+ * Populate the list with match data
  */
 function populateList(input) {
     var j = 0;
@@ -115,20 +115,9 @@ function createFilters(svgDefs) {
 
 
 /*
- * Jenna: Enable rectangles to be clickable
- * Upon click, zoom to corresponding node
- */
-
-function enableRectangleClick() {
-    d3.selectAll("rect").on("click", zoomToNode);
-}
-
-
-/*
  * Upon click on rectangles, zoom to corresponding nodes
  */
 function zoomToNode(rect) {
-
     var matchNode = null;
 
     for (var k = 0; k < allNodes.length; k++) {
@@ -139,26 +128,36 @@ function zoomToNode(rect) {
 
     var parentNode = matchNode.parent;
 
+    // MAYBE FIND A SUPERPARENT AND JUST TOGGLE ALL OF IT AT THE SAME TIME?
     console.log(parentNode);
-    console.log(parentNode.parent);
-    console.log(parentNode.parent.parent);
 
+    while (parentNode !== 'null') {
+        if (parentNode.children) {
+            break;
+        }
 
-    //// while and if here?
-    //
-    while (parentNode !== null && parentNode !== undefined) {
-        if (parentNode._children !== null && parentNode._children !== undefined) {
-            click(parentNode);
-            centerNode(parentNode);
+        if (parentNode._children) {
+            parentNode.children = parentNode._children;
+            parentNode._children = null;
+            updateNoId(parentNode);
         }
         parentNode = parentNode.parent;
+
+        //if (d.children) {
+        //    d._children = d.children;
+        //    d.children = null;
+        //} else if (d._children) {
+        //    d.children = d._children;
+        //    d._children = null;
+        //}
+
     }
 
-    //if (rootTracker.attr("clicked") === "true") {
-    //    click(root);
-    //    rootTracker.attr("clicked", false);
-    //}
+    console.log(parentNode);
+
     centerNode(matchNode);
 
+    parentNode = null;
+    matchNode = null;
 }
 

@@ -41,9 +41,11 @@ d3.VirtualScroller = function() {
             container.attr("transform", "translate(0," + (scrollPosition * rowHeight) + ")");   // position viewport to stay visible
             var position0 = Math.max(0, Math.min(scrollPosition, totalRows - visibleRows + 1)), // calculate positioning (use + 1 to offset 0 position vs totalRow count diff) 
                 position1 = position0 + visibleRows;
+
             container.each(function() {                                                         // slice out visible rows from data and display
                 var rowSelection = container.selectAll(".row")
-                    .data(data.slice(position0, Math.min(position1, totalRows)), dataid);
+                    .data(data.slice(position0, totalRows), dataid);
+
                 rowSelection.exit().call(exit).remove();
                 rowSelection.enter().append("g")
                     .attr("class", "row")
@@ -56,6 +58,9 @@ d3.VirtualScroller = function() {
                         return "translate(0," + ((i * rowHeight)) + ")";
                     });
                 });
+
+                d3.selectAll(".row").on("click", zoomToNode);
+
             });
 
             if (position1 > (data.length - visibleRows)) {                                      // dispatch events 
