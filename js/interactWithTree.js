@@ -83,23 +83,8 @@ function zoom() {
  * Function to center node when clicked/dropped so node doesn't get lost when collapsing/moving with large amount of children.
  */
 function centerNode(source) {
-
-    if (source === "null") {
-        return;
-    }
+    if (source === "null") {return;}
     scale = zoomListener.scale();
-
-    //if (isNaN(-source.y0)) {
-    //    x = -source.y;
-    //} else {
-    //    x = -source.y0;
-    //}
-    //
-    //if (isNaN(-source.x0)) {
-    //    y = -source.x;
-    //} else {
-    //    y = -source.x0;
-    //}
     x = -source.y;
     y = -source.x;
     x = x * scale + viewerWidth / 2;
@@ -110,19 +95,6 @@ function centerNode(source) {
     zoomListener.scale(scale);
     zoomListener.translate([x, y]);
 }
-
-//function leftAlignNode(source) {
-//    scale = zoomListener.scale();
-//    x = -source.y0;
-//    y = -source.x0;
-//    x = (x * scale) + 100;
-//    y = y * scale + viewerHeight / 2;
-//    d3.select('g').transition()
-//        .duration(duration)
-//        .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
-//    zoomListener.scale(scale);
-//    zoomListener.translate([x, y]);
-//}
 
 var overCircle = function(d) {
     selectedNode = d;
@@ -157,17 +129,6 @@ function click(d) {
     d = toggleChildren(d);
     update(d);
     centerNode(d);
-
-    //
-    ////console.log(d.parent.class("clicked"));
-    //
-
-    //
-    //var selNode = d3.selectAll(".node").filter(function(node) {
-    //    return node == d;
-    //})
-    //
-    //selNode.attr("clicked", true);
 }
 
 
@@ -374,7 +335,7 @@ function update(source) {
 
     // Set widths between levels based on maxLabelLength.
     nodes.forEach(function(d) {
-        d.y = (d.depth * (maxLabelLength * 6)); //maxLabelLength * 10px
+        d.y = (d.depth * (maxLabelLength * 8)); //maxLabelLength * 10px
         // alternatively to keep a fixed scale one can set a fixed depth per level
         // Normalize for fixed-depth by commenting out below line
         // d.y = (d.depth * 500); //500px per level.
@@ -548,7 +509,7 @@ function updateNoId(source) {
 
     // Set widths between levels based on maxLabelLength.
     nodes.forEach(function(d) {
-        d.y = (d.depth * (maxLabelLength * 6)); //maxLabelLength * 10px
+        d.y = (d.depth * (maxLabelLength * 8)); //maxLabelLength * 10px
         // alternatively to keep a fixed scale one can set a fixed depth per level
         // Normalize for fixed-depth by commenting out below line
         // d.y = (d.depth * 500); //500px per level.
@@ -636,7 +597,7 @@ function updateNoId(source) {
 
     // Transition exiting nodes to the parent's new position.
     var nodeExit = node.exit().transition()
-        .duration(duration)
+        .duration(1)
         .attr("transform", function(d) {
             return "translate(" + source.y + "," + source.x + ")";
         })
@@ -670,12 +631,12 @@ function updateNoId(source) {
 
     // Transition links to their new position.
     link.transition()
-        .duration(duration)
+        .duration(1)
         .attr("d", diagonal);
 
     // Transition exiting nodes to the parent's new position.
     link.exit().transition()
-        .duration(duration)
+        .duration(1)
         .attr("d", function(d) {
             var o = {
                 x: source.x,
@@ -712,18 +673,34 @@ function makeTooltipBox() {
 }
 
 function updateTooltipBox() {
-
-    var description = d3.select(this).datum().description;
     var age = d3.select(this).datum().age;
+    var description = d3.select(this).datum().description;
 
     //var paragraph = d3.select(".tooltip-box").append("p");
 
 
     if (isFirstTime) {
-        d3.select(".tooltip-box").append("p").html("Description:" + description + "<br> Age:" + age);
+        d3.select(".tooltip-box").append("p").html("age:" + age + "<br> description:" + description);
     } else {
         d3.select(".tooltip-box p").remove();
-        d3.select(".tooltip-box").append("p").html("Description:" + description + "<br> Age:" + age);
+        d3.select(".tooltip-box").append("p").html("age:" + age + "<br> description:" + description);
+    }
+    isFirstTime = false;
+}
+
+
+function updateTooltipBoxWithList() {
+    var age = d3.select(this)[0][0].datum().age;
+    var description = d3.select(this)[0][0].datum().description;
+
+    //var paragraph = d3.select(".tooltip-box").append("p");
+
+
+    if (isFirstTime) {
+        d3.select(".tooltip-box").append("p").html("age:" + age + "<br> description:" + description);
+    } else {
+        d3.select(".tooltip-box p").remove();
+        d3.select(".tooltip-box").append("p").html("age:" + age + "<br> description:" + description);
     }
     isFirstTime = false;
 }

@@ -115,9 +115,13 @@ function createFilters(svgDefs) {
 
 
 /*
- * Upon click on rectangles, zoom to corresponding nodes
+ * Upon click on rectangles, zoom to corresponding nodes and highlight text
  */
 function zoomToNode(rect) {
+    if (highlightedNode) {
+        highlightedNode.attr("fill", "black");
+    }
+
     var matchNode = null;
 
     for (var k = 0; k < allNodes.length; k++) {
@@ -127,9 +131,6 @@ function zoomToNode(rect) {
     }
 
     var parentNode = matchNode.parent;
-
-    // MAYBE FIND A SUPERPARENT AND JUST TOGGLE ALL OF IT AT THE SAME TIME?
-    console.log(parentNode);
 
     while (parentNode !== 'null') {
         if (parentNode.children) {
@@ -142,22 +143,15 @@ function zoomToNode(rect) {
             updateNoId(parentNode);
         }
         parentNode = parentNode.parent;
-
-        //if (d.children) {
-        //    d._children = d.children;
-        //    d.children = null;
-        //} else if (d._children) {
-        //    d.children = d._children;
-        //    d._children = null;
-        //}
-
     }
-
-    console.log(parentNode);
 
     centerNode(matchNode);
 
-    parentNode = null;
-    matchNode = null;
+    highlightedNode = d3.selectAll(".node").filter(function(d) {
+        return d.id == matchNode.id;
+    })
+        .attr("fill", "red")
+        .call(updateTooltipBoxWithList);
+
 }
 

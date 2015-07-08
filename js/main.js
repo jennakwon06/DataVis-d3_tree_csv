@@ -5,6 +5,7 @@
 
 
 /** Global variables interacting with tree **/
+var allNodes;
 var baseSvg;
 var diagonal;
 var draggingNode;
@@ -24,7 +25,6 @@ var viewerWidth;
 var zoomListener;
 
 /** Global variables interacting with list **/
-var allNodes;
 var chartGroup;
 var matchesText;
 var query;
@@ -33,6 +33,7 @@ var rowExit;
 var rowUpdate;
 var scrollSVG;
 var virtualScroller;
+var highlightedNode;
 
 treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
 

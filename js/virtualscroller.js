@@ -60,7 +60,6 @@ d3.VirtualScroller = function() {
                 });
 
                 d3.selectAll(".row").on("click", zoomToNode);
-
             });
 
             if (position1 > (data.length - visibleRows)) {                                      // dispatch events 
