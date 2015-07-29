@@ -1,3 +1,4 @@
+
 .node {
     cursor: pointer;
 }
@@ -8,6 +9,7 @@ rect {
 
 .row text {
     cursor: pointer;
+    font-family: sans-serif;
 }
 
 #user-input {
@@ -58,7 +60,7 @@ body {
 
 .viewport {
     position: absolute;
-    top: 30px;
+    top: 40px;
     left: 15px;
     overflow-y: auto;
     width: 280px;
@@ -70,7 +72,8 @@ body {
 }
 
 .scroll-svg {
-    top:100px
+    top: 100px;
+    width: 265px;
 }
 
 .viewport h2 {
@@ -87,12 +90,6 @@ body {
     padding: 0 8px;
     border-bottom: solid #eee 1px;
 }
-
-/*.brace {*/
-/*stroke: #2968AA;*/
-/*stroke-width: 2px;*/
-/*fill: none;*/
-/*}*/
 
 .tooltip-box {
     position: absolute;
@@ -114,4 +111,5 @@ body {
 
 .tooltip-box p {
     padding-left: 10px;
+    font-size: 14px;
 }

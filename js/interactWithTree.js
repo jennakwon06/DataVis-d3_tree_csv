@@ -234,17 +234,6 @@ dragListener = d3.behavior.drag()
             if (index > -1) {
                 draggingNode.parent.children.splice(index, 1);
             }
-            //if (typeof selectedNode.children !== 'undefined' || typeof selectedNode._children !== 'undefined') {
-            //    if (typeof selectedNode.children !== 'undefined') {
-            //        selectedNode.children.push(draggingNode);
-            //    } else {
-            //        selectedNode._children.push(draggingNode);
-            //    }
-            //} else {
-            //    selectedNode.children = [];
-            //    selectedNode.children.push(draggingNode);
-            //}
-
             if (typeof selectedNode.children !== 'undefined') {
                 selectedNode.children.push(draggingNode);
             } else if (typeof selectedNode._children !== 'undefined' && selectedNode._children !== null) {
@@ -347,141 +336,9 @@ function update(source) {
             return d.id || (d.id = ++i);
         });
 
-    // Enter any new nodes at the parent's previous position.
-    var nodeEnter = node.enter().append("g")
-        .call(dragListener)
-        .attr("class", "node")
-        .attr("transform", function(d) {
-            return "translate(" + source.x + "," + source.y + ")";
-        })
-        .on('click', click)
-        .on("mouseover", updateTooltipBox);
 
-    nodeEnter.append("circle")
-        .attr('class', 'nodeCircle')
-        .attr("r", 0)
-        .style("fill", function(d) {
-            return d._children ? "lightsteelblue" : "#fff";
-        });
-
-    // Text appending code
-    nodeEnter.append("text")
-        .attr("y", function(d) {
-            return d.children || d._children ? -2 : 2;
-        })
-        .attr("dy", ".35em")
-        .attr('class', 'nodeText')
-        .attr("text-anchor", "middle")
-        .text(function(d) {
-            return d.name;
-        })
-        .style("fill-opacity", 0);
-
-    // phantom node to give us mouseover in a radius around it
-    nodeEnter.append("circle")
-        .attr('class', 'ghostCircle')
-        .attr("r", 30)
-        .attr("opacity", 0.2) // change this to zero to hide the target area
-        .style("fill", "red")
-        .attr('pointer-events', 'mouseover')
-        .on("mouseover", function(node) {
-            overCircle(node);
-        })
-        .on("mouseout", function(node) {
-            outCircle(node);
-        });
-
-    // Update the text to reflect whether node has children or not.
-    node.select('text')
-        .attr("x", function(d) {
-            return d.children || d._children ? -10 : 10;
-        })
-        .attr("text-anchor", function(d) {
-            return d.children || d._children ? "end" : "start";
-        })
-        .text(function(d) {
-            return d.name;
-        });
-
-    // Change the circle fill depending on whether it has children and is collapsed
-    node.select("circle.nodeCircle")
-        .attr("r", 4.5)
-        .style("fill", function(d) {
-            return d._children ? "lightsteelblue" : "#fff";
-        });
-
-    // Transition nodes to their new position.
-    var nodeUpdate = node.transition()
-        .duration(duration)
-        .attr("transform", function(d) {
-            return "translate(" + d.y + "," + d.x + ")";
-        });
-
-    // Fade the text in
-    nodeUpdate.select("text")
-        .style("fill-opacity", 1);
-
-    // Transition exiting nodes to the parent's new position.
-    var nodeExit = node.exit().transition()
-        .duration(duration)
-        .attr("transform", function(d) {
-            return "translate(" + source.y + "," + source.x + ")";
-        })
-        .remove();
-
-    nodeExit.select("circle")
-        .attr("r", 0);
-
-    nodeExit.select("text")
-        .style("fill-opacity", 0);
-
-    // Update the links…
-    var link = svgGroup.selectAll("path.link")
-        .data(links, function(d) {
-            return d.target.id;
-        });
-
-    // Enter any new links at the parent's previous position.
-    link.enter().insert("path", "g")
-        .attr("class", "link")
-        .attr("d", function(d) {
-            var o = {
-                x: source.x,
-                y: source.y
-            };
-            return diagonal({
-                source: o,
-                target: o
-            });
-        });
-
-    // Transition links to their new position.
-    link.transition()
-        .duration(duration)
-        .attr("d", diagonal);
-
-    // Transition exiting nodes to the parent's new position.
-    link.exit().transition()
-        .duration(duration)
-        .attr("d", function(d) {
-            var o = {
-                x: source.x,
-                y: source.y
-            };
-            return diagonal({
-                source: o,
-                target: o
-            });
-        })
-        .remove();
-
-    // Stash the old positions for transition.
-    nodes.forEach(function(d) {
-        d.x0 = d.x;
-        d.y0 = d.y;
-    });
+    nodeUpdates(source, nodes, links);
 }
-
 
 /*
  * update without the ID stuff
@@ -521,6 +378,11 @@ function updateNoId(source) {
             return d.id = ++i;
         });
 
+    nodeUpdates(source, nodes, links);
+}
+
+
+function nodeUpdates(source, nodes, links) {
     // Enter any new nodes at the parent's previous position.
     var nodeEnter = node.enter().append("g")
         .call(dragListener)
@@ -586,7 +448,7 @@ function updateNoId(source) {
 
     // Transition nodes to their new position.
     var nodeUpdate = node.transition()
-        .duration(1)
+        .duration(duration)
         .attr("transform", function(d) {
             return "translate(" + d.y + "," + d.x + ")";
         });
@@ -597,7 +459,7 @@ function updateNoId(source) {
 
     // Transition exiting nodes to the parent's new position.
     var nodeExit = node.exit().transition()
-        .duration(1)
+        .duration(duration)
         .attr("transform", function(d) {
             return "translate(" + source.y + "," + source.x + ")";
         })
@@ -631,12 +493,12 @@ function updateNoId(source) {
 
     // Transition links to their new position.
     link.transition()
-        .duration(1)
+        .duration(duration)
         .attr("d", diagonal);
 
     // Transition exiting nodes to the parent's new position.
     link.exit().transition()
-        .duration(1)
+        .duration(duration)
         .attr("d", function(d) {
             var o = {
                 x: source.x,
@@ -657,7 +519,6 @@ function updateNoId(source) {
 }
 
 
-
 /*
  * Tree interacting with Toolboxes
  */
@@ -673,34 +534,29 @@ function makeTooltipBox() {
 }
 
 function updateTooltipBox() {
-    var age = d3.select(this).datum().age;
-    var description = d3.select(this).datum().description;
-
-    //var paragraph = d3.select(".tooltip-box").append("p");
-
+    var JobTitle = d3.select(this).datum().JobTitle;
+    var Location = d3.select(this).datum().Location;
 
     if (isFirstTime) {
-        d3.select(".tooltip-box").append("p").html("age:" + age + "<br> description:" + description);
+        d3.select(".tooltip-box").append("p").html("Job Title : " + JobTitle + "<br> Location : " + Location);
     } else {
         d3.select(".tooltip-box p").remove();
-        d3.select(".tooltip-box").append("p").html("age:" + age + "<br> description:" + description);
+        d3.select(".tooltip-box").append("p").html("Job Title :" + JobTitle + "<br> Location : " + Location);
     }
     isFirstTime = false;
 }
 
 
 function updateTooltipBoxWithList() {
-    var age = d3.select(this)[0][0].datum().age;
-    var description = d3.select(this)[0][0].datum().description;
-
-    //var paragraph = d3.select(".tooltip-box").append("p");
+    var JobTitle = d3.select(this)[0][0].datum().JobTitle;
+    var Location = d3.select(this)[0][0].datum().Location;
 
 
     if (isFirstTime) {
-        d3.select(".tooltip-box").append("p").html("age:" + age + "<br> description:" + description);
+        d3.select(".tooltip-box").append("p").html("Job Title : " + JobTitle + "<br> Location : " + Location);
     } else {
         d3.select(".tooltip-box p").remove();
-        d3.select(".tooltip-box").append("p").html("age:" + age + "<br> description:" + description);
+        d3.select(".tooltip-box").append("p").html("Job Title : " + JobTitle + "<br> Location : " + Location);
     }
     isFirstTime = false;
 }

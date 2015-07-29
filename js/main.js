@@ -15,7 +15,6 @@ var maxLabelLength;
 var panBoundary;
 var panSpeed;
 var root;
-var rootTracker;
 var selectedNode;
 var svgGroup;
 var totalNodes;
@@ -35,9 +34,10 @@ var scrollSVG;
 var virtualScroller;
 var highlightedNode;
 
-treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
 
-    /** CONVERT DATA FROM CSV TO HIERARCHIAL TREE **/
+treeJSON = d3.csv("../data/NAMEOFCSVFILE.csv", function(error, data) {
+
+    /** CONVERT DATA FROM CSV TO HIERARCHICAL TREE **/
     var dataMap = data.reduce(function(map, node) {
         map[node.name] = node;
         return map;
@@ -107,7 +107,7 @@ treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
     root.y0 = 0;
 
     // Layout the tree initially and center on the root node.
-    // collapse all nodes;
+    // Collapse all nodes initially
     tree.nodes(root).forEach(function(n) { toggleChildren(n); });
     update(root);
     centerNode(root);
@@ -121,17 +121,16 @@ treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
     // Keep track of all the nodes
     allNodes = data;
 
-    // create "isClicked" attribute for all nodes
-    //d3.selectAll(".node").attr("clicked", false);
-
     // Upon query submission, populate the list with matching nodes
     $('#submit').on("click", function(ev) {
         matchesText = []; // Clear the matches before every click
         clearList(); // Clear the list before every click
         query = $('#user-input').val(); // Obtain query
 
-        for (i = 0; i < allNodes.length; i++) { // Populate matched array
-            if (~allNodes[i].name.indexOf(query)) {
+        for (i = 0; i < allNodes.length; i++) { // Query can match name or JobTitle
+            if (~allNodes[i].name.indexOf(query)
+                || ~allNodes[i].JobTitle.indexOf(query)
+                || ~allNodes[i].Location.indexOf(query)) {
               matchesText.push(allNodes[i].name);
             }
         }
