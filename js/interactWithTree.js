@@ -534,29 +534,29 @@ function makeTooltipBox() {
 }
 
 function updateTooltipBox() {
-    var JobTitle = d3.select(this).datum().JobTitle;
-    var Location = d3.select(this).datum().Location;
+    var age = d3.select(this).datum().age;
+    var description = d3.select(this).datum().description;
 
     if (isFirstTime) {
-        d3.select(".tooltip-box").append("p").html("Job Title : " + JobTitle + "<br> Location : " + Location);
+        d3.select(".tooltip-box").append("p").html("Age : " + age + "<br> Description : " + description);
     } else {
         d3.select(".tooltip-box p").remove();
-        d3.select(".tooltip-box").append("p").html("Job Title :" + JobTitle + "<br> Location : " + Location);
+        d3.select(".tooltip-box").append("p").html("Age : " + age + "<br> Description : " + description);
     }
     isFirstTime = false;
 }
 
 
 function updateTooltipBoxWithList() {
-    var JobTitle = d3.select(this)[0][0].datum().JobTitle;
-    var Location = d3.select(this)[0][0].datum().Location;
+    var age = d3.select(this)[0][0].datum().age;
+    var description = d3.select(this)[0][0].datum().description;
 
 
     if (isFirstTime) {
-        d3.select(".tooltip-box").append("p").html("Job Title : " + JobTitle + "<br> Location : " + Location);
+        d3.select(".tooltip-box").append("p").html("Age : " + age + "<br> Description : " + description);
     } else {
         d3.select(".tooltip-box p").remove();
-        d3.select(".tooltip-box").append("p").html("Job Title : " + JobTitle + "<br> Location : " + Location);
+        d3.select(".tooltip-box").append("p").html("Age : " + age + "<br> Description : " + description);
     }
     isFirstTime = false;
 }

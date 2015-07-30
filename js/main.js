@@ -35,7 +35,7 @@ var virtualScroller;
 var highlightedNode;
 
 
-treeJSON = d3.csv("../data/NAMEOFCSVFILE.csv", function(error, data) {
+treeJSON = d3.csv("../data/sampleData.csv", function(error, data) {
 
     /** CONVERT DATA FROM CSV TO HIERARCHICAL TREE **/
     var dataMap = data.reduce(function(map, node) {
@@ -63,7 +63,7 @@ treeJSON = d3.csv("../data/NAMEOFCSVFILE.csv", function(error, data) {
         .projection(function(d) { return [d.y, d.x]; });
 
     draggingNode = null;
-    duration = 750;
+    duration = 250;
     i = 0;
     maxLabelLength = 0;
     panBoundary = 20; // Within 20px from edges will pan when dragging.
@@ -129,8 +129,8 @@ treeJSON = d3.csv("../data/NAMEOFCSVFILE.csv", function(error, data) {
 
         for (i = 0; i < allNodes.length; i++) { // Query can match name or JobTitle
             if (~allNodes[i].name.indexOf(query)
-                || ~allNodes[i].JobTitle.indexOf(query)
-                || ~allNodes[i].Location.indexOf(query)) {
+                || ~allNodes[i].age.indexOf(query)
+                || ~allNodes[i].description.indexOf(query)) {
               matchesText.push(allNodes[i].name);
             }
         }

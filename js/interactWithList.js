@@ -115,7 +115,7 @@ function createFilters(svgDefs) {
 
 
 /*
- * Upon click on rectangles, zoom to corresponding nodes and highlight text
+ * Upon click on rectangles, zoom to corresponding nodes on the graph and highlight text
  */
 function zoomToNode(rect) {
     if (highlightedNode) {
