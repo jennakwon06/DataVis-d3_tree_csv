@@ -13,3 +13,4 @@ jkwon47@gatech.edu
 * In index.html, replace NAMEOFLOGO.jpg with the name of your logo image file
 * In js/main.js, replace NAMEOFCSVFILE.csv with the name of your CSV data file to populate the list
 * Unlike original version, this webapp parses csv file instead of a json file. To use with json file, you can comment out section in main.js from "CONVERT DATA FROM CSV TO HIERARCHIAL TREE" to "SET UP"
+* To see a demo, use 
